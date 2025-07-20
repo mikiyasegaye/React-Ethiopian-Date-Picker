@@ -43,6 +43,24 @@ export const ETHIOPIAN_MONTHS: readonly string[] = [
   "ጳጉሜ", // September 6 - September 10 (5-6 days)
 ] as const;
 
+// Ethiopian month names (English) - 13 months total
+// Meskerem, Tikimt, Hidar, Tahsas, Tir, Yekatit, Megabit, Miyaziya, Ginbot, Sene, Hamle, Nehase, Pagume
+export const ETHIOPIAN_MONTHS_EN: readonly string[] = [
+  "Meskerem", // September 11 - October 10
+  "Tikimt", // October 11 - November 9
+  "Hidar", // November 10 - December 9
+  "Tahsas", // December 10 - January 8
+  "Tir", // January 9 - February 7
+  "Yekatit", // February 8 - March 9
+  "Megabit", // March 10 - April 8
+  "Miyaziya", // April 9 - May 8
+  "Ginbot", // May 9 - June 7
+  "Sene", // June 8 - July 7
+  "Hamle", // July 8 - August 6
+  "Nehase", // August 7 - September 5
+  "Pagume", // September 6 - September 10 (5-6 days)
+] as const;
+
 // Ethiopian day names (Amharic) - Monday to Sunday
 // Segno, Maksegno, Robue, Hamus, Arb, Kidame, Ihud
 export const ETHIOPIAN_DAYS: readonly string[] = [
@@ -747,25 +765,139 @@ export class EthiopianDateConverter {
     ).padStart(2, "0")}-${String(this.ethiopianDate.Day).padStart(2, "0")}`;
   }
 
-  format(pattern: string): string {
+  /**
+   * Format Ethiopian date with custom pattern
+   * @param pattern - Format pattern with placeholders
+   * @param locale - Locale for month and day names ("AMH" | "EN")
+   * @returns Formatted date string
+   *
+   * @example
+   * dateConverter.fromParts(2018, 7, 11).format("MMM DD, YYYY") // "ሐምሌ 11, 2018"
+   * dateConverter.fromParts(2018, 7, 11).format("MMM DD, YYYY", "EN") // "July 11, 2018"
+   */
+  format(pattern: string, locale: DateType = "AMH"): string {
+    let monthNames: readonly string[];
+    let eraText: string;
+
+    if (locale === "EN") {
+      // For English, use Gregorian month names based on Ethiopian month mapping
+      const gregorianMonthMap = [
+        8, // Meskerem -> September
+        9, // Tikimt -> October
+        10, // Hidar -> November
+        11, // Tahsas -> December
+        0, // Tir -> January
+        1, // Yekatit -> February
+        2, // Megabit -> March
+        3, // Miyaziya -> April
+        4, // Ginbot -> May
+        5, // Sene -> June
+        6, // Hamle -> July
+        7, // Nehase -> August
+        8, // Pagume -> September
+      ];
+      const gregorianMonthIndex =
+        gregorianMonthMap[this.ethiopianDate.Month - 1];
+      monthNames = [ENGLISH_MONTHS[gregorianMonthIndex]];
+      eraText = "E.C.";
+    } else {
+      monthNames = ETHIOPIAN_MONTHS;
+      eraText = "ዓ.ም";
+    }
+
     return pattern
       .replace("YYYY", this.ethiopianDate.Year.toString())
-      .replace("MMM", ETHIOPIAN_MONTHS[this.ethiopianDate.Month - 1])
+      .replace("MMM", monthNames[0])
       .replace("MM", String(this.ethiopianDate.Month).padStart(2, "0"))
       .replace("DD", String(this.ethiopianDate.Day).padStart(2, "0"))
       .replace("D", this.ethiopianDate.Day.toString())
-      .replace("E", "ዓ.ም")
+      .replace("E", eraText)
       .replace(
         "d",
         getEthiopianDayName(
-          getEtMonthStartDate(this.ethiopianDate.Month, this.ethiopianDate.Year)
+          getEtMonthStartDate(
+            this.ethiopianDate.Month,
+            this.ethiopianDate.Year
+          ),
+          locale
         )
       );
   }
 
-  toDateString(): string {
-    return `${ETHIOPIAN_MONTHS[this.ethiopianDate.Month - 1]} ${
-      this.ethiopianDate.Day
-    }, ${this.ethiopianDate.Year}`;
+  /**
+   * Convert to date string format
+   * @param locale - Locale for month names ("AMH" | "EN")
+   * @returns Formatted date string
+   *
+   * @example
+   * dateConverter.fromParts(2018, 7, 11).toDateString() // "ሐምሌ 11, 2018"
+   * dateConverter.fromParts(2018, 7, 11).toDateString("EN") // "July 11, 2018"
+   */
+  toDateString(locale: DateType = "AMH"): string {
+    let monthName: string;
+
+    if (locale === "EN") {
+      // For English, use Gregorian month names based on Ethiopian month mapping
+      const gregorianMonthMap = [
+        8, // Meskerem -> September
+        9, // Tikimt -> October
+        10, // Hidar -> November
+        11, // Tahsas -> December
+        0, // Tir -> January
+        1, // Yekatit -> February
+        2, // Megabit -> March
+        3, // Miyaziya -> April
+        4, // Ginbot -> May
+        5, // Sene -> June
+        6, // Hamle -> July
+        7, // Nehase -> August
+        8, // Pagume -> September
+      ];
+      const gregorianMonthIndex =
+        gregorianMonthMap[this.ethiopianDate.Month - 1];
+      monthName = ENGLISH_MONTHS[gregorianMonthIndex];
+    } else {
+      monthName = ETHIOPIAN_MONTHS[this.ethiopianDate.Month - 1];
+    }
+
+    return `${monthName} ${this.ethiopianDate.Day}, ${this.ethiopianDate.Year}`;
+  }
+
+  /**
+   * Add years to the current Ethiopian date
+   * @param years - Number of years to add (can be negative)
+   * @returns New EthiopianDateConverter instance with updated date
+   *
+   * @example
+   * const date = dateConverter.fromParts(2018, 7, 11);
+   * const futureDate = date.addYears(5); // 2023-07-11
+   * const pastDate = date.addYears(-3);  // 2015-07-11
+   */
+  addYears(years: number): EthiopianDateConverter {
+    const newEtDate = addYearsToEthiopianDate(this.ethiopianDate, years);
+    return new EthiopianDateConverter(
+      newEtDate.Year,
+      newEtDate.Month,
+      newEtDate.Day
+    );
+  }
+
+  /**
+   * Add days to the current Ethiopian date
+   * @param days - Number of days to add (can be negative)
+   * @returns New EthiopianDateConverter instance with updated date
+   *
+   * @example
+   * const date = dateConverter.fromParts(2018, 7, 11);
+   * const futureDate = date.addDays(30); // 2018-08-10
+   * const pastDate = date.addDays(-15);  // 2018-06-26
+   */
+  addDays(days: number): EthiopianDateConverter {
+    const newEtDate = addDaysToEthiopianDate(this.ethiopianDate, days);
+    return new EthiopianDateConverter(
+      newEtDate.Year,
+      newEtDate.Month,
+      newEtDate.Day
+    );
   }
 }
