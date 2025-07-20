@@ -1,0 +1,115 @@
+/* Ethiopian Date Picker Styles */
+
+/* Amharic Font Import */
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+Ethiopic:wght@400;700&display=swap");
+
+/* Ethiopian Colors */
+:root {
+  --ethiopian-green: #228b22;
+  --ethiopian-yellow: #ffd700;
+  --ethiopian-red: #da121a;
+  --ethiopian-blue: #006c93;
+}
+
+/* Amharic Font Class */
+.font-amharic {
+  font-family: "Noto Sans Ethiopic", sans-serif;
+}
+
+/* Ethiopian Color Classes */
+.bg-ethiopian-green {
+  background-color: var(--ethiopian-green);
+}
+
+.text-ethiopian-green {
+  color: var(--ethiopian-green);
+}
+
+.border-ethiopian-green {
+  border-color: var(--ethiopian-green);
+}
+
+.ring-ethiopian-green {
+  --tw-ring-color: var(--ethiopian-green);
+}
+
+.bg-ethiopian-yellow {
+  background-color: var(--ethiopian-yellow);
+}
+
+.text-ethiopian-yellow {
+  color: var(--ethiopian-yellow);
+}
+
+/* Hover States */
+.hover\:bg-ethiopian-green:hover {
+  background-color: var(--ethiopian-green);
+}
+
+.hover\:border-ethiopian-green:hover {
+  border-color: var(--ethiopian-green);
+}
+
+/* Focus States */
+.focus\:ring-ethiopian-green:focus {
+  --tw-ring-color: var(--ethiopian-green);
+}
+
+.focus\:border-ethiopian-green:focus {
+  border-color: var(--ethiopian-green);
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .ethiopian-date-picker-popover {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+/* Accessibility */
+.ethiopian-date-picker:focus-within {
+  outline: 2px solid var(--ethiopian-green);
+  outline-offset: 2px;
+}
+
+/* Animation Classes */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.transition-colors {
+  transition-property: color, background-color, border-color,
+    text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+.transition-transform {
+  transition-property: transform;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Utility Classes */
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+.opacity-50 {
+  opacity: 0.5;
+}
+
+.opacity-90 {
+  opacity: 0.9;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.cursor-not-allowed {
+  cursor: not-allowed;
+}

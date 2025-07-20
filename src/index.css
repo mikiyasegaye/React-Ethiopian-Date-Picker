@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Noto Sans Ethiopic', system-ui, sans-serif;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: #f8fafc;
+  }
+}
+
+@layer components {
+  .ethiopian-date-picker {
+    @apply font-amharic;
+  }
+  
+  .ethiopian-calendar {
+    @apply bg-white rounded-lg shadow-lg border border-gray-200;
+  }
+  
+  .ethiopian-calendar-header {
+    @apply bg-ethiopian-green text-white p-4 rounded-t-lg;
+  }
+  
+  .ethiopian-calendar-body {
+    @apply p-4;
+  }
+  
+  .ethiopian-calendar-day {
+    @apply w-10 h-10 flex items-center justify-center rounded-full hover:bg-ethiopian-green hover:text-white cursor-pointer transition-colors;
+  }
+  
+  .ethiopian-calendar-day.selected {
+    @apply bg-ethiopian-green text-white;
+  }
+  
+  .ethiopian-calendar-day.today {
+    @apply border-2 border-ethiopian-yellow;
+  }
+  
+  .ethiopian-calendar-day.other-month {
+    @apply text-gray-400;
+  }
+} 
